@@ -1,0 +1,29 @@
+# ROS2/colcon generated files
+build/
+install/
+log/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local debug outputs
+*.log
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editor/OS noise
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Large/local experiment artifacts
+record/*.npy
+record/*.npz
+record/*.bag
+record/*.db3
+

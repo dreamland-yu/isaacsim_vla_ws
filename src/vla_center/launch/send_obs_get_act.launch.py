@@ -16,6 +16,12 @@ def generate_launch_description():
         name='send_observation_2cam',
     )
 
+    send_obs_3cam_node = Node(
+        package='vla_center',
+        executable='send_observation_3cam',
+        name='send_observation_3cam',
+    )
+
     get_action_node = Node(
         package='vla_center',
         executable='get_action',
@@ -25,7 +31,8 @@ def generate_launch_description():
     return LaunchDescription(
         [
             # send_obs_1cam_node,
-            send_obs_2cam_node,
+            # send_obs_2cam_node,
+            send_obs_3cam_node,
             get_action_node,
         ]
     )

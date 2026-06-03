@@ -26,6 +26,7 @@ setup(
         'console_scripts': [
             'send_observation = vla_center.send_observation:main',
             'send_observation_2cam = vla_center.send_observation_2cam:main',
+            'send_observation_3cam = vla_center.send_observation_3cam:main',
             'get_action = vla_center.get_action:main',
             'get_action_record = vla_center.get_action_record:main',
             'replay_record = vla_center.replay_record:main',
