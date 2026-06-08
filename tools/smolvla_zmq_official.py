@@ -142,6 +142,10 @@ class FakePolicy:
         self.start_action: np.ndarray | None = None
 
     def select_action(self, observation: Observation, step: int) -> np.ndarray:
+        if self.action_mode == "hold_current":
+            if self.start_action is None:
+                self.start_action = observation.joints.astype(np.float32).copy()
+            return self.start_action.copy()
         if self.action_mode in ("reach_forward_grasp_return", "cube_hover_grasp_return"):
             if self.start_action is None:
                 self.start_action = observation.joints.astype(np.float32).copy()
@@ -479,6 +483,7 @@ def parse_args() -> argparse.Namespace:
             "home",
             "test",
             "mirror",
+            "hold_current",
             "alternate",
             "reach_forward_grasp_return",
             "cube_hover_grasp_return",
