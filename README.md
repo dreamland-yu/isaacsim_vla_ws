@@ -181,8 +181,8 @@ This starts Rviz2 with pre-defined `.rviz` config, which visualizes images from 
 ```bash
 cd ~/isaacsim_vla_ws/bash
 source setup_systemros.sh
-./give_joint_command.sh # give new target state
-./reset_joint_states.sh # reset to initial state
+./give_joint_command.sh # give new target state, --new-calib gives target under new calibration, similar logic for --old-calib. New calib by default. 
+./reset_joint_states.sh # reset to initial state, --new-calib gives target under new calibration, similar logic for --old-calib. New calib by default. 
 ```
 
 This quickly test the controller node of action graph for the robot arm model, by giving one-time target state or reset to initial state, which is specified for robot SO100;
@@ -196,7 +196,7 @@ Always start Isaac Sim GUI on the host machine, and press **PLAY** button to sta
 ```bash
 cd ~/isaacsim_vla_ws/bash
 source setup_isaacsim.sh
-./start_isaac_sim.sh
+./start_isaac_sim_so101_new_calib.sh
 ```
 
 <details>
@@ -217,8 +217,8 @@ ros2 launch vla_center send_obs_get_act.launch.py
 
 ```bash
 conda activate smolvla
-cd ~/lerobot/examples/tutorial/smolvla
-python smolvla_zmq.py
+cd ~/lerobot/isaacsim_sim2real/scripts
+python so101_follower_smolvla.py
 ```
 
 </details>
@@ -246,7 +246,7 @@ On Jetson Orin Nano, **inside** the container:
 ```bash
 docker start -ai smolvla_pytorch27_container
 cd /opt/lerobot/examples/tutorial/smolvla
-python3 smolvla_zmq.py
+python so101_follower_sim2real.py
 ```
 
 </details>
@@ -263,7 +263,7 @@ For now, the safety estimatoronly only runs on host machine, not on Jetson Orin 
 ```bash
 cd ~/isaacsim_vla_ws/bash
 source setup_isaacsim.sh
-./start_isaac_sim.sh
+./start_isaac_sim_so101_new_calib.sh
 ```
 
 Pres **Play** button.
@@ -326,23 +326,7 @@ Manually stop the process when the recording is finished replaying.
 
 </br>
 
-**Terminal 2**: Start safety estimator
-
-```bash
-conda activate smolvla
-cd ~/isaacsim_vla_ws/safety_estimator
-python run_safety_estimator.py
-```
-
-**Terminal 3**: Start VLA model
-
-```bash
-conda activate smolvla
-cd ~/lerobot/examples/tutorial/smolvla
-python smolvla_safety_estimator.py
-```
-
-**Terminal 4**: Start nodes to send history to estimator
+**Terminal 2**: Start nodes to send history to estimator
 
 ```bash
 cd ~/isaacsim_vla_ws/
@@ -351,7 +335,55 @@ source install/setup.bash
 ros2 launch vla_center estimate_safety.launch.py
 ```
 
+**Terminal 3**: Start VLA model
+
+```bash
+conda activate smolvla
+cd ~/lerobot/isaacsim_sim2real/scripts
+python so101_follower_smolvla.py
+```
+
+**Terminal 4**: Start safety estimator
+
+```bash
+conda activate smolvla
+cd ~/isaacsim_vla_ws/safety_estimator
+python run_safety_estimator.py
+```
+
 </details>
+
+
+#### 4. sim2real synchronization
+
+The following functions are for synchronization between simulated and real robot, i.e. given a fixed trajectory, move the simulated and real robot simultaneously. 
+
+**Terminal 1**: start isaac sim
+
+```bash
+cd ~/isaacsim_vla_ws/bash
+source setup_isaacsim.sh
+./start_isaac_sim_so101_new_calib.sh
+```
+
+**Terminal 2**: Start node only for joint states
+
+```bash
+cd ~/isaacsim_vla_ws/
+source bash/setup_systemros.sh
+source install/setup.bash
+ros2 launch vla_center exchange_joint_state.launch.py
+```
+
+**Terminal 3**: Send a fixed trajectory
+
+```bash
+conda activate smolvla
+cd ~/lerobot/isaacsim_sim2real/scripts
+python so101_follower_fix_traj.py --sim --real
+```
+
+
 
 ## Open tasks
 
